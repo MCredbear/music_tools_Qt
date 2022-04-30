@@ -17,10 +17,9 @@ int main(int argc, char *argv[])
 
 
     Editor editor;
-    editor.readFile("");
+    editor.readFile("/home/redbear/堀江晶太 Evan Call - Sincerely (off vocal).flac");
     engine.rootContext()->setContextProperty("editor", &editor);
     engine.addImageProvider("coverImageProvider", editor.coverImageProvider);
-    qDebug()<<"OK";
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

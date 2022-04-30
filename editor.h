@@ -2,14 +2,21 @@
 #define EDITOR_H
 
 #include <QObject>
+#include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 #include <QDateTime>
 #include <QQuickImageProvider>
 #include <taglib/taglib.h>
 #include <taglib/mpegfile.h>
+#include <taglib/flacfile.h>
+#include <taglib/mp4file.h>
+#include <taglib/wavfile.h>
+#include <taglib/apefile.h>
 #include <taglib/id3v2tag.h>
 #include <taglib/tag.h>
 #include <taglib/attachedpictureframe.h>
+#include <taglib/flacpicture.h>
 
 class Editor;
 class CoverImageProvider;
@@ -20,8 +27,13 @@ class Editor : public QObject
 public:
     Editor(QObject *parent = nullptr);
 
+    enum formats {mp3, flac, m4a, wav, ogg};
+    formats format;
+
     QFile file;
-    TagLib::MPEG::File *mpegfile;
+    TagLib::MPEG::File *mpegFile;
+    TagLib::FLAC::File *flacFile;
+    TagLib::MP4::File *mp4File;
     QDateTime lastModifiedTime;
     QString name;
     QString artist;
