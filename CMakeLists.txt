@@ -18,9 +18,9 @@ link_libraries("tag")
 
 set(PROJECT_SOURCES
         main.cpp
-        editor.cpp
-        editor.h
+        editor.h editor.cpp
         qml.qrc
+        toast.h toast.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

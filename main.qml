@@ -9,7 +9,10 @@ Window {
     height: 480
     visible: true
     title: "IDv3 editor"
-    Material.theme: Material.Dark
+    Material.theme: Material.Light
+    Toast {
+        id: t
+    }
     Component.onCompleted: {
         name.text = editor.getName()
         artist.text = editor.getArtist()
@@ -50,6 +53,9 @@ Window {
                     id: replaceCoverButton
                     width: parent.width
                     height: cover.height / 3
+                    onReleased: {
+                        toast.sendToast("233")
+                    }
                 }
                 Button {
                     id: removeCoverButton
