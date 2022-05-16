@@ -147,3 +147,20 @@ void Editor::getCover()
     }
     }
 }
+
+QString Editor::getLyric()
+{
+    QString lyric = "";
+    switch (format)
+    {
+    case mp3:
+    {
+        auto tag = mpegFile->ID3v2Tag(false);
+        auto list = tag->frameListMap()["USLT"];
+        if (!list.front()->toString().isNull())
+            lyric = QString::fromStdWString(list.front()->toString().toWString());
+    }
+    break;
+    }
+    return lyric;
+}

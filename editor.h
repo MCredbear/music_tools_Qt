@@ -39,10 +39,12 @@ public:
     QString artist;
     QString album;
     Q_INVOKABLE void readFile(QString path);
+    
     Q_INVOKABLE QString getName();
     Q_INVOKABLE QString getArtist();
     Q_INVOKABLE QString getAlbum();
     Q_INVOKABLE void getCover();
+    Q_INVOKABLE QString getLyric();
     CoverImageProvider *coverImageProvider;
 
 signals:

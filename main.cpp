@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     Editor editor;
     Toast toast;
-    editor.readFile("/home/redbear/堀江晶太 Evan Call - Sincerely (off vocal).flac");
+    editor.readFile("/home/redbear/test.mp3");
     engine.rootContext()->setContextProperty("editor", &editor);
     engine.rootContext()->setContextProperty("toast", &toast);
     engine.addImageProvider("coverImageProvider", editor.coverImageProvider);
