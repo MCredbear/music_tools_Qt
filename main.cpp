@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     Editor editor;
     Toast toast;
-    editor.readFile("/home/redbear/test.mp3");
+    editor.readFile("/home/redbear/test3.flac");
     engine.rootContext()->setContextProperty("editor", &editor);
     engine.rootContext()->setContextProperty("toast", &toast);
     engine.addImageProvider("coverImageProvider", editor.coverImageProvider);

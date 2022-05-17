@@ -17,7 +17,7 @@ Window {
         album.text = editor.getAlbum()
         editor.getCover()
         cover.source = "image://coverImageProvider/cover"
-        editor.getLyric()
+        console.log(editor.getLyric())
     }
     ToolBar {
         id: topToolBar

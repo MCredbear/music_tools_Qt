@@ -158,9 +158,33 @@ QString Editor::getLyric()
         auto tag = mpegFile->ID3v2Tag(false);
         auto list = tag->frameListMap()["USLT"];
         if (!list.front()->toString().isNull())
-            lyric = QString::fromStdWString(list.front()->toString().toWString());
+            lyric = QString::fromStdWString(list.front()->toString().toWString()); // cannot be Bit8
     }
     break;
+    case flac:
+    {
+        file.open(QIODevice::ReadOnly);
+        QByteArray data = file.readAll();
+        file.close();
+        QByteArray begin = QByteArray::fromHex("0000004c59524943533d"); // "\x00\x00\x00LYRIC="
+        QByteArray end = QByteArray::fromHex("000000");
+        for (int i = 0; i < data.length(); i++)
+        {
+            if (data.mid(i, begin.length()) == begin)
+            {   
+                for (int j = i + begin.length(); j < data.length() - end.length(); j++)
+                {
+                    if (data.mid(j, end.length()) == end)
+                    {
+                        lyric = data.mid(i + begin.length(), j - i - begin.length());
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        break;
+    }
     }
     return lyric;
 }
