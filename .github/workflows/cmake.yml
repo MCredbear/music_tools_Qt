@@ -24,7 +24,7 @@ jobs:
       run: sudo apt install -y libtag1-dev
     
     - name: Install Qt
-      run: sudo apt install -y qt6-base-dev qt6-declarative-dev qt6-multimedia-dev qt6-tools-dev qt6-tools-dev-tools qt6-image-formats-plugins qt6-l10n-tools
+      run: sudo apt install -y qtbase5-dev qtbase5-dev-tools qt5-style-plugins qt5-qmake qt5-image-formats-plugins qtdeclarative5-dev qtdeclarative5-dev-tools qttools5-dev qttools5-dev-tools
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
