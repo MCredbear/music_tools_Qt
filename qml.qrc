@@ -3,5 +3,8 @@
         <file>main.qml</file>
         <file>Toast.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>Android_ui.qml</file>
+        <file>Android_editor_page.qml</file>
+        <file>Android_file_manager_page.qml</file>
     </qresource>
 </RCC>

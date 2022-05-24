@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "*.qml": "qml",
-        "*.tcc": "cpp"
-    }
-}

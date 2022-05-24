@@ -4,6 +4,7 @@
 #include <QDebug>
 
 #include "editor.h"
+#include "file_manager.h"
 #include "toast.h"
 
 int main(int argc, char *argv[])
@@ -19,9 +20,10 @@ int main(int argc, char *argv[])
 
     Editor editor;
     Toast toast;
-    editor.readFile("/home/redbear/test3.flac");
+
     engine.rootContext()->setContextProperty("editor", &editor);
     engine.rootContext()->setContextProperty("toast", &toast);
+    engine.rootContext()->setContextProperty("fileManager", new file_manager);
     engine.addImageProvider("coverImageProvider", editor.coverImageProvider);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
