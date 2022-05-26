@@ -11,17 +11,9 @@ Item {
 
     Toast { }
 
-    ToolBar {
-        id: topToolBar
-        z: 10
-        anchors.top: parent.top
-        width: parent.width
-    }
     StackView {
         id: stackView
-        anchors.top: topToolBar.bottom
-        anchors.bottom: parent.bottom
-        width: parent.width
+        anchors.fill: parent
         initialItem: fileManagerPage
     }
 

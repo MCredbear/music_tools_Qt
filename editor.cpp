@@ -171,7 +171,7 @@ QString Editor::getLyric()
         for (int i = 0; i < data.length(); i++)
         {
             if (data.mid(i, begin.length()) == begin)
-            {   
+            {
                 for (int j = i + begin.length(); j < data.length() - end.length(); j++)
                 {
                     if (data.mid(j, end.length()) == end)
@@ -187,4 +187,25 @@ QString Editor::getLyric()
     }
     }
     return lyric;
+}
+
+QString Editor::getYear()
+{
+    QString year;
+    switch (format)
+    {
+    case mp3:
+        year = QString::number(mpegFile->tag()->year());
+        break;
+    case flac:
+        year = QString::number(flacFile->tag()->year());
+        break;
+    case m4a:
+        year = QString::number(mp4File->tag()->year());
+        break;
+    }
+    if (year == "0")
+        return "";
+    else
+        return year;
 }

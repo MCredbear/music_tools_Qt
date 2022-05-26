@@ -45,6 +45,7 @@ public:
     Q_INVOKABLE QString getAlbum();
     Q_INVOKABLE void getCover();
     Q_INVOKABLE QString getLyric();
+    Q_INVOKABLE QString getYear();
     CoverImageProvider *coverImageProvider;
 
 signals:

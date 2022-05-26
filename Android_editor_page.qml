@@ -2,153 +2,256 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 
-Flickable {
-    anchors.top: topToolBar.bottom
-    anchors.bottom: parent.bottom
-    width: parent.width
+Item {
+    anchors.fill: parent
+    width: 320
+    height: 640
 
-    Component.onCompleted: {
-        editor.readFile(filePath)
-        name.text = editor.getName()
-        artist.text = editor.getArtist()
-        album.text = editor.getAlbum()
-        editor.getCover()
-        cover.source = "image://coverImageProvider/cover"
-        console.log(editor.getLyric())
+    ToolBar {
+        id: topToolBar
+        z: 10
+        anchors.top: parent.top
+        width: parent.width
+
+        ToolButton {
+            Text {
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                text: "back"
+            }
+            onReleased: {
+                stackView.pop()
+            }
+        }
+        ToolButton {
+            anchors.right: parent.right
+            Text {
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                text: "save"
+            }
+        }
     }
 
-    Column {
-        anchors.left: parent.left
-        anchors.leftMargin: 25
-        anchors.right: parent.right
-        anchors.rightMargin: 25
-        height: parent.height
-        Rectangle {
-            width: 1
-            height: 20
-            color: "transparent"
+    Flickable {
+        id: flickable
+        anchors.top: topToolBar.bottom
+        anchors.bottom: parent.bottom
+        flickableDirection: Flickable.VerticalFlick
+        width: parent.width
+        contentHeight: column.height
+
+        Component.onCompleted: {
+            editor.readFile(filePath)
+            name.text = editor.getName()
+            artist.text = editor.getArtist()
+            album.text = editor.getAlbum()
+            editor.getCover()
+            cover.source = "image://coverImageProvider/cover"
+            year.text = editor.getYear()
+            lyric.text = editor.getLyric()
+
         }
-        Rectangle {
-            width: parent.width
-            height: cover.height
-            Image {
-                id: cover
-                anchors.left: parent.left
-                width: window.width / 2.5
-                height: width
-                cache: false
+
+        Column {
+            id: column
+            anchors.left: parent.left
+            anchors.leftMargin: 25
+            anchors.right: parent.right
+            anchors.rightMargin: 25
+
+            Rectangle {
+                width: 1
+                height: 20
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: parent.width
+                height: cover.height
+                Image {
+                    id: cover
+                    anchors.left: parent.left
+                    width: window.width / 2.5
+                    height: width
+                    cache: false
+                }
+                Column {
+                    anchors.right: parent.right
+                    anchors.left: cover.right
+                    anchors.leftMargin: 25
+                    Button {
+                        id: replaceCoverButton
+                        width: parent.width
+                        height: cover.height / 3
+                    }
+                    Button {
+                        id: removeCoverButton
+                        width: parent.width
+                        height: cover.height / 3
+                    }
+                    Button {
+                        id: exportCoverButton
+                        width: parent.width
+                        height: cover.height / 3
+                    }
+                }
             }
             Column {
-                anchors.right: parent.right
-                anchors.left: cover.right
-                anchors.leftMargin: 25
-                Button {
-                    id: replaceCoverButton
-                    width: parent.width
-                    height: cover.height / 3
-                }
-                Button {
-                    id: removeCoverButton
-                    width: parent.width
-                    height: cover.height / 3
-                }
-                Button {
-                    id: exportCoverButton
-                    width: parent.width
-                    height: cover.height / 3
-                }
-            }
-        }
-        Item {
-            width: parent.width
-            height: 40
-            Text {
-                y: 0
                 width: parent.width
-                height: 20
-                text: qsTr("歌曲名称")
-                color: Material.primaryColor
-                Rectangle {
-                    anchors.bottom: parent.bottom
+                Text {
                     width: parent.width
-                    height: 2
+                    height: contentHeight
+                    text: qsTr("歌曲名称")
                     color: Material.primaryColor
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.primaryColor
+                    }
                 }
-            }
-            TextInput {
-                id: name
-                y: 20
-                width: parent.width
-                height: 20
-                clip: true
-            }
-            Rectangle {
-                anchors.bottom: parent.bottom
-                width: parent.width
-                height: 2
-                color: Material.accentColor
-            }
-        }
-        Item {
-            width: parent.width
-            height: 40
-            Text {
-                y: 0
-                width: parent.width
-                height: 20
-                text: qsTr("歌手")
-                color: Material.primaryColor
-                Rectangle {
-                    anchors.bottom: parent.bottom
+                TextEdit {
+                    id: name
                     width: parent.width
-                    height: 2
-                    color: Material.primaryColor
+                    height: contentHeight
+                    selectByMouse: true
+                    clip: true
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.accentColor
+                    }
                 }
+
             }
-            TextInput {
-                id: artist
-                y: 20
+            Column {
                 width: parent.width
-                height: 20
-                clip: true
-            }
-            Rectangle {
-                anchors.bottom: parent.bottom
-                width: parent.width
-                height: 2
-                color: Material.accentColor
-            }
-        }
-        Item {
-            width: parent.width
-            height: 40
-            Text {
-                y: 0
-                width: parent.width
-                height: 20
-                text: qsTr("专辑")
-                color: Material.primaryColor
-                Rectangle {
-                    anchors.bottom: parent.bottom
+                Text {
                     width: parent.width
-                    height: 2
+                    height: contentHeight
+                    text: qsTr("歌手")
                     color: Material.primaryColor
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.primaryColor
+                    }
                 }
+                TextEdit {
+                    id: artist
+                    width: parent.width
+                    height: contentHeight
+                    selectByMouse: true
+                    clip: true
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.accentColor
+                    }
+                }
+
             }
-            TextInput {
-                id: album
-                y: 20
+            Column {
                 width: parent.width
-                height: 20
-                clip: true
+                Text {
+                    width: parent.width
+                    height: contentHeight
+                    text: qsTr("专辑")
+                    color: Material.primaryColor
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.primaryColor
+                    }
+                }
+                TextEdit {
+                    id: album
+                    width: parent.width
+                    height: contentHeight
+                    selectByMouse: true
+                    clip: true
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.accentColor
+                    }
+                }
+
             }
+            Column {
+                width: parent.width
+                Text {
+                    width: parent.width
+                    height: contentHeight
+                    text: qsTr("年份")
+                    color: Material.primaryColor
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.primaryColor
+                    }
+                }
+                TextEdit {
+                    id: year
+                    width: parent.width
+                    height: contentHeight
+                    selectByMouse: true
+                    clip: true
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.accentColor
+                    }
+                }
+
+            }
+            Column {
+                width: parent.width
+                Text {
+                    width: parent.width
+                    height: contentHeight
+                    text: qsTr("歌词")
+                    color: Material.primaryColor
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.primaryColor
+                    }
+                }
+                TextEdit {
+                    id: lyric
+                    width: parent.width
+                    height: contentHeight
+                    selectByMouse: true
+                    clip: true
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 2
+                        color: Material.accentColor
+                    }
+                }
+
+            }
+
             Rectangle {
-                anchors.bottom: parent.bottom
-                width: parent.width
-                height: 2
-                color: Material.accentColor
+                width: 1
+                height: 20
+                color: "transparent"
             }
         }
     }
-
 }
+
+

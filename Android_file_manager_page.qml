@@ -4,9 +4,7 @@ import QtQuick.Controls.Material 2.15
 
 Item {
     id: fileManagerPage
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
-    width: parent.width
+    anchors.fill: parent
 
     Component.onCompleted: {
         var length = fileManager.readDir(dirPath)
@@ -21,9 +19,43 @@ Item {
     )
 }
 }
+
+ToolBar {
+    id: topToolBar
+    z: 10
+    anchors.top: parent.top
+    width: parent.width
+
+    ToolButton {
+        Text {
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            text: "back"
+        }
+        onReleased: {
+            dirPath += "/.."
+            var length = fileManager.readDir(dirPath)
+            fileListModel.clear()
+            for (var i = 0; i < length; i++)
+        {
+            fileListModel.append(
+            {
+                "name": fileManager.name(i),
+                "isFile": fileManager.isFile(i),
+                "modifiedTime": fileManager.modifiedTime(i)
+            }
+        )
+    }
+}
+}
+}
+
 ListView {
     id: fileListView
-    anchors.fill: parent
+    anchors.top: topToolBar.bottom
+    anchors.bottom: parent.bottom
+    width: parent.width
     model: ListModel {id: fileListModel}
     delegate: Button {
     width: parent.width
