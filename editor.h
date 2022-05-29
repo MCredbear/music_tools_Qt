@@ -18,6 +18,8 @@
 #include <taglib/attachedpictureframe.h>
 #include <taglib/flacpicture.h>
 
+#include "toast.h"
+
 class Editor;
 class CoverImageProvider;
 
@@ -31,6 +33,7 @@ public:
     formats format;
 
     QFile file;
+    QFileInfo fileInfo;
     TagLib::MPEG::File *mpegFile;
     TagLib::FLAC::File *flacFile;
     TagLib::MP4::File *mp4File;
@@ -38,7 +41,9 @@ public:
     QString name;
     QString artist;
     QString album;
+
     Q_INVOKABLE void readFile(QString path);
+    Q_INVOKABLE void saveFile();
     
     Q_INVOKABLE QString getName();
     Q_INVOKABLE QString getArtist();
@@ -47,6 +52,15 @@ public:
     Q_INVOKABLE QString getLyric();
     Q_INVOKABLE QString getYear();
     CoverImageProvider *coverImageProvider;
+
+    Q_INVOKABLE void setName(QString name);
+    // Q_INVOKABLE void setArtist(QString artist);
+    // Q_INVOKABLE void setAlbum(QString album);
+    // Q_INVOKABLE void setCover(QString path);
+    // Q_INVOKABLE void setLyric(QString lyric);
+    // Q_INVOKABLE void setYear(QString year);
+
+    Toast *toast;
 
 signals:
 

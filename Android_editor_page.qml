@@ -32,6 +32,10 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 text: "save"
             }
+            onReleased: {
+                editor.setName(name.text)
+                editor.saveFile()
+            }
         }
     }
 

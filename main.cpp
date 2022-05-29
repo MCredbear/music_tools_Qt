@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 
     Editor editor;
     Toast toast;
+    editor.toast = &toast;
 
     engine.rootContext()->setContextProperty("editor", &editor);
     engine.rootContext()->setContextProperty("toast", &toast);

@@ -27,7 +27,7 @@ void Editor::readFile(QString path)
     qDebug() << "readed";
     file.setFileName(path);
     lastModifiedTime = file.fileTime(QFileDevice::FileModificationTime);
-    QFileInfo fileInfo = QFileInfo(path);
+    fileInfo = QFileInfo(path);
     QString formatS = fileInfo.completeSuffix();
 
     if (!formatS.compare("mp3", Qt::CaseInsensitive))
@@ -50,6 +50,70 @@ void Editor::readFile(QString path)
         break;
     case m4a:
         mp4File = new TagLib::MP4::File(QFile::encodeName(path).constData());
+        break;
+    }
+}
+
+void Editor::saveFile()
+{
+    switch (format)
+    {
+    case mp3:
+        if (mpegFile->save())
+        {
+            if (file.open(QIODevice::ReadWrite))
+            {
+                if (file.setFileTime(lastModifiedTime, QFileDevice::FileModificationTime))
+                {
+                    toast->sendToast("保存成功");
+                    file.close();
+                }
+                else
+                    toast->sendToast("保存失败");
+            }
+            else
+                toast->sendToast("保存失败");
+        }
+        else
+            toast->sendToast("保存失败");
+        break;
+    case flac:
+        if (flacFile->save())
+        {
+            if (file.open(QIODevice::ReadWrite))
+            {
+                if (file.setFileTime(lastModifiedTime, QFileDevice::FileModificationTime))
+                {
+                    toast->sendToast("保存成功");
+                    file.close();
+                }
+                else
+                    toast->sendToast("保存失败");
+            }
+            else
+                toast->sendToast("保存失败");
+        }
+        else
+            toast->sendToast("保存失败");
+        break;
+    case m4a:
+        if (mp4File->save())
+        {
+            if (file.open(QIODevice::ReadWrite))
+            {
+                if (file.setFileTime(lastModifiedTime, QFileDevice::FileModificationTime))
+                {
+                    toast->sendToast("保存成功");
+                    file.close();
+                }
+                else
+                    toast->sendToast("保存失败");
+            }
+            else
+                toast->sendToast("保存失败");
+        }
+        else
+            toast->sendToast("保存失败");
         break;
     }
 }
@@ -157,7 +221,7 @@ QString Editor::getLyric()
     {
         auto tag = mpegFile->ID3v2Tag(false);
         auto list = tag->frameListMap()["USLT"];
-        if (!list.front()->toString().isNull())
+        if (!list.isEmpty())
             lyric = QString::fromStdWString(list.front()->toString().toWString()); // cannot be Bit8
     }
     break;
@@ -208,4 +272,17 @@ QString Editor::getYear()
         return "";
     else
         return year;
+}
+
+void Editor::setName(QString name)
+{
+    switch (format)
+    {
+    case mp3:
+        mpegFile->tag()->setTitle(name.toStdWString());
+        break;
+    case flac:
+        flacFile->tag()->setTitle(name.toStdWString());
+        break;
+    }
 }
