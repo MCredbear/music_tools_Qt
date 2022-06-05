@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-
     Editor editor;
     Toast toast;
     editor.toast = &toast;

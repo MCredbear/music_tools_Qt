@@ -6,6 +6,11 @@ Editor::Editor(QObject *parent)
     coverImageProvider = new CoverImageProvider(this);
 }
 
+Editor::~Editor()
+{
+    fileInfo.~QFileInfo(); //虽然会报 malloc(): unsorted double linked list corrupted，但是至少能解决关闭程序后文件时间有被修改的问题
+}
+
 CoverImageProvider::CoverImageProvider(Editor *parent)
     : QQuickImageProvider(QQuickImageProvider::Image)
 {
@@ -27,7 +32,7 @@ void Editor::readFile(QString path)
     qDebug() << "readed";
     file.setFileName(path);
     lastModifiedTime = file.fileTime(QFileDevice::FileModificationTime);
-    fileInfo = QFileInfo(path);
+    fileInfo.setFile(file);
     QString formatS = fileInfo.completeSuffix();
 
     if (!formatS.compare("mp3", Qt::CaseInsensitive))
@@ -228,22 +233,20 @@ QString Editor::getLyric()
     case flac:
     {
         file.open(QIODevice::ReadOnly);
-        QByteArray data = file.readAll();
+        data = file.readAll();
         file.close();
-        QByteArray begin = QByteArray::fromHex("0000004c59524943533d"); // "\x00\x00\x00LYRIC="
-        QByteArray end = QByteArray::fromHex("000000");
+        QByteArray head = "LYRICS=";
+        unsigned int size = 0;
         for (int i = 0; i < data.length(); i++)
         {
-            if (data.mid(i, begin.length()) == begin)
+            if (data.mid(i, head.length()) == head)
             {
-                for (int j = i + begin.length(); j < data.length() - end.length(); j++)
+                for (int j = i - 1; j >= i - 4; j--) 
                 {
-                    if (data.mid(j, end.length()) == end)
-                    {
-                        lyric = data.mid(i + begin.length(), j - i - begin.length());
-                        break;
-                    }
+                    unsigned char B = data.at(j);
+                    size = (size << 8) + B; // "bf0e0300"H = 30ebfH = 200383D
                 }
+                lyric = data.mid(i + head.length(), size - head.length()); qDebug()<<size;
                 break;
             }
         }
@@ -284,5 +287,89 @@ void Editor::setName(QString name)
     case flac:
         flacFile->tag()->setTitle(name.toStdWString());
         break;
+    }
+}
+
+void Editor::setArtist(QString artist)
+{
+    switch (format)
+    {
+    case mp3:
+        mpegFile->tag()->setArtist(artist.toStdWString());
+        break;
+    case flac:
+        flacFile->tag()->setArtist(artist.toStdWString());
+        break;
+    }
+}
+
+void Editor::setAlbum(QString album)
+{
+    switch (format)
+    {
+    case mp3:
+        mpegFile->tag()->setAlbum(album.toStdWString());
+        break;
+    case flac:
+        flacFile->tag()->setAlbum(album.toStdWString());
+        break;
+    }
+}
+
+void Editor::setLyric(QString lyric)
+{
+    switch (format)
+    {
+    case mp3:
+    {
+        auto tag = mpegFile->ID3v2Tag(true);
+        auto list = tag->frameListMap()["USLT"];
+        list.front()->setText(lyric.toStdString());
+    }
+    break;
+    case flac:
+    {
+        // saveFile(); //因为写flac的歌词的方法不是taglib实现的，所以得先保存taglib的标签然后重新读取
+        file.open(QIODevice::ReadWrite);
+        data = file.readAll();
+        file.seek(0);
+        bool hasLyric = false;
+        QByteArray head = QByteArray::fromHex("0000004c59524943533d"); // "\x00\x00\x00LYRIC="
+        QByteArray tail = QByteArray::fromHex("000000");
+        for (int i = 0; i < data.length(); i++)
+        {
+            if (data.mid(i, head.length()) == head)
+            {
+                for (int j = i + head.length(); j < data.length() - tail.length(); j++)
+                {
+                    if (data.mid(j, tail.length()) == tail)
+                    {
+                        data = data.left(i + head.length()) + lyric.toUtf8() + data.right(data.length() - j); qDebug()<<"found";
+                        hasLyric = true;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        if (!hasLyric)
+        {
+            QByteArray titleHead = QByteArray::fromHex("0000005449544c45"); // "\x00\x00\x00TITLE"
+            for (int i = 0; i < data.length(); i++)
+            {
+                if (data.mid(i, titleHead.length()) == titleHead)
+                {
+                    data = data.left(i - 1) + head + lyric.toUtf8() + data.right(data.length() - i); qDebug()<<i;
+                    break;
+                }
+            }
+        }
+        
+        file.write(data);
+        file.close();
+        // delete flacFile;
+        // flacFile = new TagLib::FLAC::File(QFile::encodeName(file.fileName()).constData()); //因为写flac的歌词的方法不是taglib实现的，所以taglib的标签得重新读取
+    }
+    break;
     }
 }

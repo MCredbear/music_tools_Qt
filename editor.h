@@ -17,6 +17,8 @@
 #include <taglib/tag.h>
 #include <taglib/attachedpictureframe.h>
 #include <taglib/flacpicture.h>
+#include <taglib/xiphcomment.h>
+#include <taglib/flacproperties.h>
 
 #include "toast.h"
 
@@ -28,12 +30,14 @@ class Editor : public QObject
     Q_OBJECT
 public:
     Editor(QObject *parent = nullptr);
+    ~Editor();
 
     enum formats {mp3, flac, m4a, wav, ogg};
     formats format;
 
     QFile file;
     QFileInfo fileInfo;
+    QByteArray data;
     TagLib::MPEG::File *mpegFile;
     TagLib::FLAC::File *flacFile;
     TagLib::MP4::File *mp4File;
@@ -54,10 +58,10 @@ public:
     CoverImageProvider *coverImageProvider;
 
     Q_INVOKABLE void setName(QString name);
-    // Q_INVOKABLE void setArtist(QString artist);
-    // Q_INVOKABLE void setAlbum(QString album);
+    Q_INVOKABLE void setArtist(QString artist);
+    Q_INVOKABLE void setAlbum(QString album);
     // Q_INVOKABLE void setCover(QString path);
-    // Q_INVOKABLE void setLyric(QString lyric);
+    Q_INVOKABLE void setLyric(QString lyric);
     // Q_INVOKABLE void setYear(QString year);
 
     Toast *toast;

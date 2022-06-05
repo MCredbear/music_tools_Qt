@@ -33,8 +33,12 @@ Item {
                 text: "save"
             }
             onReleased: {
-                editor.setName(name.text)
-                editor.saveFile()
+                // editor.setName(name.text)
+                // editor.setArtist(artist.text)
+                // editor.setAlbum(album.text)
+                
+                editor.setLyric(lyric.text)
+                // editor.saveFile()
             }
         }
     }
