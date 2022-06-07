@@ -232,25 +232,9 @@ QString Editor::getLyric()
     break;
     case flac:
     {
-        file.open(QIODevice::ReadOnly);
-        data = file.readAll();
-        file.close();
-        QByteArray head = "LYRICS=";
-        unsigned int size = 0;
-        unsigned char Byte;
-        for (int i = 0; i < data.length(); i++)
-        {
-            if (data.mid(i, head.length()) == head)
-            {
-                for (int j = i - 1; j >= i - 4; j--)
-                {
-                    Byte = data.at(j);
-                    size = (size << 8) + Byte; // "bf1e0300"H = 31ebfH = 204479D
-                }
-                lyric = data.mid(i + head.length(), size - head.length());
-                break;
-            }
-        }
+        TagLib::Ogg::XiphComment *tag = flacFile->xiphComment();
+        if (tag->contains("LYRICS"))
+            lyric = tag->fieldListMap().operator[]("LYRICS").toString().data(TagLib::String::UTF8).data();
         break;
     }
     }
@@ -330,61 +314,8 @@ void Editor::setLyric(QString lyric)
     break;
     case flac:
     {
-        // saveFile(); //因为写flac的歌词的方法不是taglib实现的，所以得先保存taglib的标签然后重新读取
-        file.open(QIODevice::ReadWrite);
-        data = file.readAll();
-        file.seek(0);
-        bool hasLyric = false;
-        QByteArray head = "LYRICS=";
-        QByteArray _lyric = lyric.toUtf8();
-        unsigned int oldSize = 0, newSize = _lyric.length() + head.length();
-        unsigned char Byte;
-        for (int i = 0; i < data.length(); i++)
-        {
-            if (data.mid(i, head.length()) == head)
-            {
-                hasLyric = true;
-                for (int j = i - 1; j >= i - 4; j--)
-                {
-                    Byte = data.at(j);
-                    oldSize = (oldSize << 8) + Byte; // "bf1e0300"H = 31ebfH = 204479D
-                }
-                Byte = newSize >> 24;
-                data[i - 1] = Byte;
-                Byte = newSize >> 16;
-                data[i - 2] = Byte;
-                Byte = newSize >> 8;
-                data[i - 3] = Byte;
-                Byte = newSize;
-                data[i - 4] = Byte;
-                data = data.left(i + head.length()) + _lyric + data.mid(i + oldSize);
-                break;
-            }
-        }
-        if (!hasLyric)
-        {
-            QByteArray titleHead = "TITLE";
-            for (int i = 0; i < data.length(); i++)
-            {
-                if (data.mid(i, titleHead.length()) == titleHead)
-                {
-                    QByteArray Bytes;
-                    Byte = newSize;
-                    Bytes.append(Byte);
-                    Byte = newSize >> 8;
-                    Bytes.append(Byte);
-                    Byte = newSize >> 16;
-                    Bytes.append(Byte);
-                    Byte = newSize >> 24;
-                    Bytes.append(Byte);
-                    data = data.left(i - 4) + Bytes + head + _lyric + data.mid(i - 4);
-                    break;
-                }
-            }
-        }
-
-        file.write(data);
-        file.close();
+        TagLib::Ogg::XiphComment *tag = flacFile->xiphComment(true);
+        tag->addField("LYRICS", lyric.toStdWString(), true);
     }
     break;
     }
