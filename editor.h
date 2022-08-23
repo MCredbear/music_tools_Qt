@@ -62,7 +62,7 @@ public:
     Q_INVOKABLE void setAlbum(QString album);
     // Q_INVOKABLE void setCover(QString path);
     Q_INVOKABLE void setLyric(QString lyric);
-    // Q_INVOKABLE void setYear(QString year);
+    Q_INVOKABLE void setYear(QString year);
 
     Toast *toast;
 

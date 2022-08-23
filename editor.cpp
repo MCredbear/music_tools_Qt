@@ -320,3 +320,16 @@ void Editor::setLyric(QString lyric)
     break;
     }
 }
+
+void Editor::setYear(QString year) // "0"可视作没有该标签，在保存时如果该值为0则该标签会被抹去
+{
+    switch (format)
+    {
+    case mp3:
+        mpegFile->tag()->setYear(year.toInt());
+        break;
+    case flac:
+        flacFile->tag()->setYear(year.toInt());
+        break;
+    }
+}

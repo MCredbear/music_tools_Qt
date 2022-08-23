@@ -38,6 +38,7 @@ Item {
                 editor.setAlbum(album.text)
                 
                 editor.setLyric(lyric.text)
+                if (year.text !== "") editor.setYear(year.text)
                 editor.saveFile()
             }
         }
