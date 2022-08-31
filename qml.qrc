@@ -6,5 +6,10 @@
         <file>Android_ui.qml</file>
         <file>Android_editor_page.qml</file>
         <file>Android_file_manager_page.qml</file>
+        <file>Material_Button.qml</file>
+        <file>Material_Image.qml</file>
+        <file>Material_Rectangle.qml</file>
+        <file>Android_search_lyric_page.qml</file>
+        <file>Android_lyric_page.qml</file>
     </qresource>
 </RCC>

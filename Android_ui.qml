@@ -15,17 +15,30 @@ Item {
         id: stackView
         anchors.fill: parent
         initialItem: fileManagerPage
+
+        Component {
+            id: fileManagerPage
+            Android_file_manager_page {}
+        }
+
+        Component {
+            id: editorPage
+            Android_editor_page {}
+        }
+
+        Component {
+            id: searchLyricPage
+            Android_search_lyric_page {}
+        }
+
+        Component {
+            id: lyricPage
+            Android_lyric_page {}
+        }
     }
 
-    Component {
-        id: fileManagerPage
-        Android_file_manager_page {}
-    }
 
-    Component{
-        id: editorPage
-        Android_editor_page {}
-    }
+
 
 
 }

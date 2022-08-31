@@ -6,11 +6,11 @@
 #include <QDateTime>
 #include <QDir>
 
-class file_manager : public QObject
+class FileManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit file_manager(QObject *parent = nullptr);
+    explicit FileManager(QObject *parent = nullptr);
     QFileInfoList fileInfoList;
     Q_INVOKABLE int readDir(QString path); //返回文件数量
     Q_INVOKABLE bool isFile(int index);

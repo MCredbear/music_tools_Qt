@@ -3,22 +3,31 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 
 Item {
-    anchors.fill: parent
     width: 320
     height: 640
+
+    property string name
+    property string artist
+    property string album
+    property string year
+    property string lyric
 
     ToolBar {
         id: topToolBar
         z: 10
         anchors.top: parent.top
-        width: parent.width
+        anchors.left: parent.left
+        anchors.right: parent.right
 
         ToolButton {
-            Text {
+            Image {
                 anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: "back"
+                source: "file:../arrow_back_ios_white_24dp.svg"
+                fillMode: Image.Tile
+                anchors.rightMargin: 9
+                anchors.leftMargin: 17
+                anchors.bottomMargin: 10
+                anchors.topMargin: 10
             }
             onReleased: {
                 stackView.pop()
@@ -26,19 +35,22 @@ Item {
         }
         ToolButton {
             anchors.right: parent.right
-            Text {
+            Image {
                 anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: "save"
+                source: "file:../save_white_24dp.svg"
+                fillMode: Image.Tile
+                anchors.rightMargin: 10
+                anchors.leftMargin: 13
+                anchors.bottomMargin: 10
+                anchors.topMargin: 10
             }
             onReleased: {
-                editor.setName(name.text)
-                editor.setArtist(artist.text)
-                editor.setAlbum(album.text)
+                editor.setName(name)
+                editor.setArtist(artist)
+                editor.setAlbum(album)
                 
-                editor.setLyric(lyric.text)
-                if (year.text !== "") editor.setYear(year.text)
+                editor.setLyric(lyric)
+                if (year.text !== "") editor.setYear(year)
                 editor.saveFile()
             }
         }
@@ -46,21 +58,22 @@ Item {
 
     Flickable {
         id: flickable
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.top: topToolBar.bottom
         anchors.bottom: parent.bottom
         flickableDirection: Flickable.VerticalFlick
-        width: parent.width
         contentHeight: column.height
 
         Component.onCompleted: {
             editor.readFile(filePath)
-            name.text = editor.getName()
-            artist.text = editor.getArtist()
-            album.text = editor.getAlbum()
+            name = editor.getName()
+            artist = editor.getArtist()
+            album = editor.getAlbum()
             editor.getCover()
             cover.source = "image://coverImageProvider/cover"
-            year.text = editor.getYear()
-            lyric.text = editor.getLyric()
+            year = editor.getYear()
+            lyric = editor.getLyric()
 
         }
 
@@ -80,7 +93,7 @@ Item {
             Rectangle {
                 width: parent.width
                 height: cover.height
-                Image {
+                Material_Image {
                     id: cover
                     anchors.left: parent.left
                     width: window.width / 2.5
@@ -111,7 +124,8 @@ Item {
             Column {
                 width: parent.width
                 Text {
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: contentHeight
                     text: qsTr("歌曲名称")
                     color: Material.primaryColor
@@ -123,9 +137,10 @@ Item {
                     }
                 }
                 TextEdit {
-                    id: name
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: contentHeight
+                    text: name
                     selectByMouse: true
                     clip: true
                     Rectangle {
@@ -138,9 +153,11 @@ Item {
 
             }
             Column {
-                width: parent.width
+                anchors.left: parent.left
+                anchors.right: parent.right
                 Text {
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: contentHeight
                     text: qsTr("歌手")
                     color: Material.primaryColor
@@ -152,14 +169,16 @@ Item {
                     }
                 }
                 TextEdit {
-                    id: artist
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: contentHeight
+                    text: artist
                     selectByMouse: true
                     clip: true
                     Rectangle {
                         anchors.bottom: parent.bottom
-                        width: parent.width
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         height: 2
                         color: Material.accentColor
                     }
@@ -167,28 +186,33 @@ Item {
 
             }
             Column {
-                width: parent.width
+                anchors.left: parent.left
+                anchors.right: parent.right
                 Text {
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: contentHeight
                     text: qsTr("专辑")
                     color: Material.primaryColor
                     Rectangle {
                         anchors.bottom: parent.bottom
-                        width: parent.width
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         height: 2
                         color: Material.primaryColor
                     }
                 }
                 TextEdit {
-                    id: album
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: contentHeight
+                    text: album
                     selectByMouse: true
                     clip: true
                     Rectangle {
                         anchors.bottom: parent.bottom
-                        width: parent.width
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         height: 2
                         color: Material.accentColor
                     }
@@ -196,28 +220,33 @@ Item {
 
             }
             Column {
-                width: parent.width
+                anchors.left: parent.left
+                anchors.right: parent.right
                 Text {
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: contentHeight
                     text: qsTr("年份")
                     color: Material.primaryColor
                     Rectangle {
                         anchors.bottom: parent.bottom
-                        width: parent.width
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         height: 2
                         color: Material.primaryColor
                     }
                 }
                 TextEdit {
-                    id: year
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: contentHeight
+                    text: year
                     selectByMouse: true
                     clip: true
                     Rectangle {
                         anchors.bottom: parent.bottom
-                        width: parent.width
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         height: 2
                         color: Material.accentColor
                     }
@@ -225,28 +254,58 @@ Item {
 
             }
             Column {
-                width: parent.width
-                Text {
-                    width: parent.width
-                    height: contentHeight
-                    text: qsTr("歌词")
-                    color: Material.primaryColor
-                    Rectangle {
-                        anchors.bottom: parent.bottom
-                        width: parent.width
-                        height: 2
+                anchors.left: parent.left
+                anchors.right: parent.right
+                Rectangle {
+                    id: rectangle
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: lyricLable.height
+                    color: "transparent"
+                    Text {
+                        id: lyricLable
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: contentHeight
+                        text: qsTr("歌词")
                         color: Material.primaryColor
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 2
+                            color: Material.primaryColor
+                        }
+                    }
+                    Material_Button {
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: lyricLable.height - 4
+                        color: "white"
+                        radius: 2
+                        Text {
+                            anchors.fill: parent
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            text: qsTr("搜索歌词")
+                        }
+                        onReleased: {
+                            stackView.push(searchLyricPage, {"keyword": name})
+                        }
                     }
                 }
+
                 TextEdit {
-                    id: lyric
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: contentHeight
+                    text: lyric
                     selectByMouse: true
                     clip: true
                     Rectangle {
                         anchors.bottom: parent.bottom
-                        width: parent.width
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         height: 2
                         color: Material.accentColor
                     }

@@ -11,6 +11,6 @@ Window {
     title: "IDv3 editor"
     Material.theme: Material.Light
     Android_ui {
-    anchors.fill: parent
+        anchors.fill: parent
     }
 }

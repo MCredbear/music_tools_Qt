@@ -1,11 +1,11 @@
 #include "file_manager.h"
 
-file_manager::file_manager(QObject *parent)
+FileManager::FileManager(QObject *parent)
     : QObject{parent}
 {
 }
 
-int file_manager::readDir(QString path)
+int FileManager::readDir(QString path)
 {
     fileInfoList.clear();
     QDir dir(path);
@@ -21,17 +21,17 @@ int file_manager::readDir(QString path)
     return fileInfoList.length();
 }
 
-bool file_manager::isFile(int index)
+bool FileManager::isFile(int index)
 {
     return fileInfoList.at(index).isFile();
 }
 
-QString file_manager::name(int index)
+QString FileManager::name(int index)
 {
     return fileInfoList.at(index).fileName();
 }
 
-QString file_manager::modifiedTime(int index)
+QString FileManager::modifiedTime(int index)
 {
     return fileInfoList.at(index).lastModified().toString("yyyy MM dd hh:mm:ss");
 }

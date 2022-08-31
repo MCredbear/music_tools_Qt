@@ -6,6 +6,7 @@
 #include "editor.h"
 #include "file_manager.h"
 #include "toast.h"
+#include "searcher.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,10 +21,12 @@ int main(int argc, char *argv[])
     Editor editor;
     Toast toast;
     editor.toast = &toast;
+    Searcher searcher;
 
     engine.rootContext()->setContextProperty("editor", &editor);
     engine.rootContext()->setContextProperty("toast", &toast);
-    engine.rootContext()->setContextProperty("fileManager", new file_manager);
+    engine.rootContext()->setContextProperty("fileManager", new FileManager);
+    engine.rootContext()->setContextProperty("searcher", &searcher);
     engine.addImageProvider("coverImageProvider", editor.coverImageProvider);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
