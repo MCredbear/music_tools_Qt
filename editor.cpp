@@ -123,7 +123,7 @@ void Editor::saveFile()
     }
 }
 
-QString Editor::getName()
+QString Editor::getTitle()
 {
     switch (format)
     {
@@ -217,6 +217,53 @@ void Editor::getCover()
     }
 }
 
+QString Editor::getDisk()
+{
+    QString disk = "";
+    switch (format)
+    {
+    case mp3:
+    {
+        auto tag = mpegFile->ID3v2Tag(false);
+        auto list = tag->frameListMap()["TPOS"];
+        if (!list.isEmpty())
+            disk = QString::fromStdWString(list.front()->toString().toWString()); // cannot be Bit8
+        break;
+    }
+    case flac:
+    {
+        TagLib::Ogg::XiphComment *tag = flacFile->xiphComment();
+        if (tag->contains("DISCNUMBER"))
+            disk = tag->fieldListMap().operator[]("DISCNUMBER").toString().data(TagLib::String::UTF8).data();
+        break;
+    }
+    }
+    return disk;
+}
+
+QString Editor::getTrack()
+{
+    QString track = "";
+    switch (format)
+    {
+    case mp3:
+    {
+        auto tag = mpegFile->ID3v2Tag(false);
+        track = QString::number(tag->track());
+        break;
+    }
+    case flac:
+    {
+        TagLib::Ogg::XiphComment *tag = flacFile->xiphComment();
+        track = QString::number(tag->track());
+        break;
+    }
+    }
+    if (track == "0")
+        track = "";
+    return track;
+}
+
 QString Editor::getLyric()
 {
     QString lyric = "";
@@ -262,15 +309,15 @@ QString Editor::getYear()
         return year;
 }
 
-void Editor::setName(QString name)
+void Editor::setTitle(QString title)
 {
     switch (format)
     {
     case mp3:
-        mpegFile->tag()->setTitle(name.toStdWString());
+        mpegFile->tag()->setTitle(title.toStdWString());
         break;
     case flac:
-        flacFile->tag()->setTitle(name.toStdWString());
+        flacFile->tag()->setTitle(title.toStdWString());
         break;
     }
 }
@@ -301,6 +348,66 @@ void Editor::setAlbum(QString album)
     }
 }
 
+void Editor::setDisk(QString disk)
+{
+    switch (format)
+    {
+    case mp3:
+    {
+        auto tag = mpegFile->ID3v2Tag(true);
+        auto list = tag->frameListMap()["TPOS"];
+        list.front()->setText(disk.toStdString());
+        break;
+    }
+    case flac:
+    {
+        TagLib::Ogg::XiphComment *tag = flacFile->xiphComment(true);
+        tag->addField("DISCNUMBER", disk.toStdWString(), true);
+        break;
+    }
+    }
+}
+
+void Editor::setTrack(QString track)
+{
+    if (track != "")
+    {
+        switch (format)
+        {
+        case mp3:
+        {
+            auto tag = mpegFile->ID3v2Tag(true);
+            tag->setTrack(track.toUInt());
+            break;
+        }
+        case flac:
+        {
+            TagLib::Ogg::XiphComment *tag = flacFile->xiphComment(true);
+            tag->setTrack(track.toUInt());
+            break;
+        }
+        }
+    }
+    else
+    {
+        switch (format)
+        {
+        case mp3:
+        {
+            auto tag = mpegFile->ID3v2Tag(true);
+            tag->setTrack(0);
+            break;
+        }
+        case flac:
+        {
+            TagLib::Ogg::XiphComment *tag = flacFile->xiphComment(true);
+            tag->setTrack(0);
+            break;
+        }
+        }
+    }
+}
+
 void Editor::setLyric(QString lyric)
 {
     switch (format)
@@ -309,27 +416,39 @@ void Editor::setLyric(QString lyric)
     {
         auto tag = mpegFile->ID3v2Tag(true);
         auto list = tag->frameListMap()["USLT"];
-        list.front()->setText(lyric.toStdString());
+        if (list.isEmpty())
+        {
+            TagLib::ID3v2::UnsynchronizedLyricsFrame *frame = new TagLib::ID3v2::UnsynchronizedLyricsFrame;
+            frame->setText(lyric.toStdString());
+            tag->addFrame(frame);
+        }
+        else
+        {
+            list.front()->setText(lyric.toStdString());
+        }
+        break;
     }
-    break;
     case flac:
     {
         TagLib::Ogg::XiphComment *tag = flacFile->xiphComment(true);
         tag->addField("LYRICS", lyric.toStdWString(), true);
+        break;
     }
-    break;
     }
 }
 
-void Editor::setYear(QString year) // "0"可视作没有该标签，在保存时如果该值为0则该标签会被抹去
+void Editor::setYear(QString year)
 {
-    switch (format)
+    if (year != "")
     {
-    case mp3:
-        mpegFile->tag()->setYear(year.toInt());
-        break;
-    case flac:
-        flacFile->tag()->setYear(year.toInt());
-        break;
+        switch (format)
+        {
+        case mp3:
+            mpegFile->tag()->setYear(year.toInt());
+            break;
+        case flac:
+            flacFile->tag()->setYear(year.toInt());
+            break;
+        }
     }
 }

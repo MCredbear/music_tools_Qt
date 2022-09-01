@@ -14,6 +14,7 @@
 #include <taglib/wavfile.h>
 #include <taglib/apefile.h>
 #include <taglib/id3v2tag.h>
+#include <taglib/unsynchronizedlyricsframe.h>
 #include <taglib/tag.h>
 #include <taglib/attachedpictureframe.h>
 #include <taglib/flacpicture.h>
@@ -42,24 +43,25 @@ public:
     TagLib::FLAC::File *flacFile;
     TagLib::MP4::File *mp4File;
     QDateTime lastModifiedTime;
-    QString name;
-    QString artist;
-    QString album;
 
     Q_INVOKABLE void readFile(QString path);
     Q_INVOKABLE void saveFile();
     
-    Q_INVOKABLE QString getName();
+    Q_INVOKABLE QString getTitle();
     Q_INVOKABLE QString getArtist();
     Q_INVOKABLE QString getAlbum();
     Q_INVOKABLE void getCover();
+    Q_INVOKABLE QString getDisk();
+    Q_INVOKABLE QString getTrack();
     Q_INVOKABLE QString getLyric();
     Q_INVOKABLE QString getYear();
     CoverImageProvider *coverImageProvider;
 
-    Q_INVOKABLE void setName(QString name);
+    Q_INVOKABLE void setTitle(QString title);
     Q_INVOKABLE void setArtist(QString artist);
     Q_INVOKABLE void setAlbum(QString album);
+    Q_INVOKABLE void setDisk(QString disk);
+    Q_INVOKABLE void setTrack(QString track);
     // Q_INVOKABLE void setCover(QString path);
     Q_INVOKABLE void setLyric(QString lyric);
     Q_INVOKABLE void setYear(QString year);

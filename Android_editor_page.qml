@@ -6,9 +6,11 @@ Item {
     width: 320
     height: 640
 
-    property string name
+    property string title
     property string artist
     property string album
+    property string disk
+    property string track
     property string year
     property string lyric
 
@@ -45,10 +47,12 @@ Item {
                 anchors.topMargin: 10
             }
             onReleased: {
-                editor.setName(name)
+                editor.setTitle(title)
                 editor.setArtist(artist)
                 editor.setAlbum(album)
-                
+                editor.setDisk(disk)
+                editor.setTrack(track)
+
                 editor.setLyric(lyric)
                 if (year.text !== "") editor.setYear(year)
                 editor.saveFile()
@@ -67,14 +71,15 @@ Item {
 
         Component.onCompleted: {
             editor.readFile(filePath)
-            name = editor.getName()
+            title = editor.getTitle()
             artist = editor.getArtist()
             album = editor.getAlbum()
             editor.getCover()
             cover.source = "image://coverImageProvider/cover"
+            disk = editor.getDisk()
+            track = editor.getTrack()
             year = editor.getYear()
             lyric = editor.getLyric()
-
         }
 
         Column {
@@ -140,9 +145,12 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     height: contentHeight
-                    text: name
+                    text: title
                     selectByMouse: true
                     clip: true
+                    onTextChanged: {
+                        if (text !== title) title = text
+                    }
                     Rectangle {
                         anchors.bottom: parent.bottom
                         width: parent.width
@@ -150,7 +158,6 @@ Item {
                         color: Material.accentColor
                     }
                 }
-
             }
             Column {
                 anchors.left: parent.left
@@ -175,6 +182,9 @@ Item {
                     text: artist
                     selectByMouse: true
                     clip: true
+                    onTextChanged: {
+                        if (text !== artist) artist = text
+                    }
                     Rectangle {
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
@@ -183,7 +193,6 @@ Item {
                         color: Material.accentColor
                     }
                 }
-
             }
             Column {
                 anchors.left: parent.left
@@ -209,6 +218,9 @@ Item {
                     text: album
                     selectByMouse: true
                     clip: true
+                    onTextChanged: {
+                        if (text !== album) album = text
+                    }
                     Rectangle {
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
@@ -217,7 +229,6 @@ Item {
                         color: Material.accentColor
                     }
                 }
-
             }
             Column {
                 anchors.left: parent.left
@@ -243,6 +254,9 @@ Item {
                     text: year
                     selectByMouse: true
                     clip: true
+                    onTextChanged: {
+                        if (text !== year) year = text
+                    }
                     Rectangle {
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
@@ -251,8 +265,86 @@ Item {
                         color: Material.accentColor
                     }
                 }
-
             }
+            Item {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: children[0].height
+                Column {
+                    anchors.left: parent.left
+                    width: parent.width / 2.1
+                    Text {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: contentHeight
+                        text: qsTr("磁盘号")
+                        color: Material.primaryColor
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 2
+                            color: Material.primaryColor
+                        }
+                    }
+                    TextEdit {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: contentHeight
+                        text: disk
+                        selectByMouse: true
+                        clip: true
+                        onTextChanged: {
+                            if (text !== disk) disk = text
+                        }
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 2
+                            color: Material.accentColor
+                        }
+                    }
+                }
+                Column {
+                    anchors.right: parent.right
+                    width: parent.width / 2.1
+                    Text {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: contentHeight
+                        text: qsTr("音轨号")
+                        color: Material.primaryColor
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 2
+                            color: Material.primaryColor
+                        }
+                    }
+                    TextEdit {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: contentHeight
+                        text: track
+                        selectByMouse: true
+                        clip: true
+                        onTextChanged: {
+                            if (text !== track) track = text
+                        }
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 2
+                            color: Material.accentColor
+                        }
+                    }
+                }
+            }
+
+
             Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -302,6 +394,9 @@ Item {
                     text: lyric
                     selectByMouse: true
                     clip: true
+                    onTextChanged: {
+                        if (text !== lyric) lyric = text
+                    }
                     Rectangle {
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
@@ -310,7 +405,6 @@ Item {
                         color: Material.accentColor
                     }
                 }
-
             }
 
             Rectangle {
