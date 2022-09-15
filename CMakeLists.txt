@@ -14,7 +14,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick QuickControls2)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick QuickControls2)
 
-link_libraries("tag")
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/taglib/)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/taglib_headers/)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -52,6 +54,8 @@ target_compile_definitions(music_tools_Qt
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(music_tools_Qt
   PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+target_link_libraries(music_tools_Qt
+  PRIVATE tag)
 
 set_target_properties(music_tools_Qt PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

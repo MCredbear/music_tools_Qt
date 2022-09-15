@@ -1,25 +1,24 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
-#include <QObject>
-#include <QDebug>
-#include <QFile>
-#include <QFileInfo>
-#include <QDateTime>
-#include <QQuickImageProvider>
-#include <taglib/taglib.h>
-#include <taglib/mpegfile.h>
-#include <taglib/flacfile.h>
-#include <taglib/mp4file.h>
-#include <taglib/wavfile.h>
-#include <taglib/apefile.h>
-#include <taglib/id3v2tag.h>
-#include <taglib/unsynchronizedlyricsframe.h>
-#include <taglib/tag.h>
-#include <taglib/attachedpictureframe.h>
-#include <taglib/flacpicture.h>
-#include <taglib/xiphcomment.h>
-#include <taglib/flacproperties.h>
+#include "QObject"
+#include "QDebug"
+#include "QFile"
+#include "QFileInfo"
+#include "QDateTime"
+#include "QQuickImageProvider"
+#include "mpegfile.h"
+#include "flacfile.h"
+#include "mp4file.h"
+#include "wavfile.h"
+#include "apefile.h"
+#include "id3v2tag.h"
+#include "unsynchronizedlyricsframe.h"
+#include "tag.h"
+#include "attachedpictureframe.h"
+#include "flacpicture.h"
+#include "xiphcomment.h"
+#include "flacproperties.h"
 
 #include "toast.h"
 

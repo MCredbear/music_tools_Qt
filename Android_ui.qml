@@ -6,7 +6,7 @@ Item {
     id: window
     width: 320
     height: 640
-    property string dirPath: "/home/redbear"
+    property string dirPath: "/home"
     property string filePath
 
     Toast { }
